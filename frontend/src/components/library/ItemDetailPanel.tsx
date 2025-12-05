@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { classNames } from '@/utils/classNames';
 import { Button, IconButton, Badge, Input, Textarea, Tooltip } from '@/components/common';
+import { useMediaQuery } from '@/hooks';
 import {
   X,
   FileText,
@@ -85,6 +86,7 @@ export const ItemDetailPanel: React.FC<ItemDetailPanelProps> = ({
   const [suggestedTags, setSuggestedTags] = useState<string[]>([]);
   const [aiSummary, setAiSummary] = useState<string | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const { isMobile } = useMediaQuery();
   
   // Keep the current item in state to allow close animation
   const [displayItem, setDisplayItem] = useState<Item | null>(null);
@@ -214,19 +216,20 @@ export const ItemDetailPanel: React.FC<ItemDetailPanelProps> = ({
         onClick={onClose}
       />
 
-      {/* Panel - smooth slide */}
+      {/* Panel - smooth slide (full-screen on mobile) */}
       <div
         ref={panelRef}
         className={classNames(
-          'fixed top-0 right-0 h-full w-full sm:w-[480px] bg-surface z-50',
+          'fixed top-0 right-0 h-full bg-surface z-50',
           'border-l border-border shadow-2xl',
           'flex flex-col',
+          isMobile ? 'w-full' : 'w-[480px]',
           isOpen ? 'translate-x-0' : 'translate-x-full'
         )}
         style={{
           transitionProperty: 'transform',
-          transitionDuration: '500ms',
-          transitionTimingFunction: 'cubic-bezier(0.25, 0.1, 0.25, 1)', // Smooth ease
+          transitionDuration: '300ms',
+          transitionTimingFunction: 'cubic-bezier(0.25, 0.1, 0.25, 1)',
         }}
       >
         {/* Header */}

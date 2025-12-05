@@ -189,6 +189,7 @@ export const NotesPage = () => {
           setEditingNote(null);
         }}
         onSubmit={handleAddNote}
+        note={editingNote}
       />
 
       {/* Note Preview Modal */}

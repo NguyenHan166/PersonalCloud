@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  /* ========== Colors ========== */
+  /* ========== Colors (Light Theme - Default) ========== */
   --color-background: #F8FAFC;
   --color-surface: #FFFFFF;
   --color-primary: #6366F1;
@@ -30,6 +30,8 @@
   --animate-fade-in: fade-in 0.2s ease-out;
   --animate-slide-in: slide-in 0.25s ease-out;
   --animate-spin: spin 1s linear infinite;
+  --animate-toast-in: toast-in 0.3s ease-out;
+  --animate-toast-out: toast-out 0.2s ease-in forwards;
   
   @keyframes fade-in {
     from { opacity: 0; }
@@ -74,20 +76,188 @@
     }
   }
   
+  @keyframes toast-in {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes toast-out {
+    from {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    to {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+  }
+  
+  @keyframes modal-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
   /* Custom durations */
   --duration-400: 400ms;
+}
+
+/* ========== CSS Variables for Theme Switching ========== */
+:root {
+  --bg: #F8FAFC;
+  --surface: #FFFFFF;
+  --surface-hover: #F1F5F9;
+  --border: #E2E8F0;
+  --text: #1E293B;
+  --text-secondary: #64748B;
+  --muted: #94A3B8;
+  --primary: #6366F1;
+  --primary-hover: #4F46E5;
+  
+  /* Component specific */
+  --input-bg: #FFFFFF;
+  --card-bg: #FFFFFF;
+  --dropdown-bg: #FFFFFF;
+  --modal-bg: #FFFFFF;
+  --tooltip-bg: #1E293B;
+  --tooltip-text: #FFFFFF;
+}
+
+/* ========== Dark Theme ========== */
+.dark {
+  --bg: #0F172A;
+  --surface: #1E293B;
+  --surface-hover: #334155;
+  --border: #334155;
+  --text: #F8FAFC;
+  --text-secondary: #CBD5E1;
+  --muted: #64748B;
+  --primary: #818CF8;
+  --primary-hover: #6366F1;
+  
+  /* Component specific */
+  --input-bg: #1E293B;
+  --card-bg: #1E293B;
+  --dropdown-bg: #1E293B;
+  --modal-bg: #1E293B;
+  --tooltip-bg: #F8FAFC;
+  --tooltip-text: #1E293B;
+  
+  /* Override Tailwind theme colors for dark mode */
+  --color-background: #0F172A;
+  --color-surface: #1E293B;
+  --color-border: #334155;
+  --color-text: #F8FAFC;
+  --color-text-secondary: #CBD5E1;
+  --color-muted: #64748B;
+  --color-primary: #818CF8;
+  --color-primary-dark: #6366F1;
 }
 
 /* ========== Base Styles ========== */
 body {
   font-family: var(--font-sans);
-  background-color: var(--color-background);
-  color: var(--color-text);
+  background-color: var(--bg);
+  color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Focus ring utility */
+/* ========== Focus Styles (A11y) ========== */
 .focus-ring {
   @apply outline-none ring-2 ring-primary/50 ring-offset-2;
+}
+
+/* Enhanced focus-visible for all interactive elements */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Skip to content link for keyboard navigation */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--primary);
+  color: white;
+  padding: 8px 16px;
+  z-index: 100;
+  transition: top 0.2s;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ========== Dark Mode Specific Overrides ========== */
+.dark .bg-surface {
+  background-color: var(--surface);
+}
+
+.dark .bg-gray-50 {
+  background-color: #1E293B;
+}
+
+.dark .bg-gray-100 {
+  background-color: #334155;
+}
+
+.dark .bg-white {
+  background-color: var(--surface);
+}
+
+.dark .text-text {
+  color: var(--text);
+}
+
+.dark .text-muted {
+  color: var(--muted);
+}
+
+.dark .border-border {
+  border-color: var(--border);
+}
+
+.dark .hover\:bg-gray-100:hover {
+  background-color: #334155;
+}
+
+.dark .hover\:bg-gray-50:hover {
+  background-color: #1E293B;
+}
+
+/* Dark mode shadows */
+.dark .shadow-lg,
+.dark .shadow-md,
+.dark .shadow {
+  --tw-shadow-color: rgba(0, 0, 0, 0.5);
+}
+
+/* ========== Reduced Motion ========== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

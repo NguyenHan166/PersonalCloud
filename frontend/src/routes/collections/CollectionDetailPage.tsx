@@ -4,7 +4,7 @@ import { ArrowLeft, Plus, Globe, Lock, Settings, Share2 } from 'lucide-react';
 import { Button, IconButton, Badge, Tooltip, EmptyState } from '@/components/common';
 import { ItemGrid, ItemDetailPanel } from '@/components/library';
 import { CollectionModal } from '@/components/collections';
-import { CreateShareModal } from '@/components/modals';
+import { CreateShareModal, ItemPickerModal } from '@/components/modals';
 import { mockCollections, mockItems } from '@/api/mockData';
 import type { Item, ViewMode } from '@/types/domain';
 
@@ -15,6 +15,7 @@ export const CollectionDetailPage = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const [shareItem, setShareItem] = useState<Item | null>(null);
+  const [isItemPickerOpen, setIsItemPickerOpen] = useState(false);
 
   // Find collection
   const collection = mockCollections.find(c => c.id === id);
@@ -47,8 +48,12 @@ export const CollectionDetailPage = () => {
   };
 
   const handleAddItems = () => {
-    console.log('Add items to collection');
-    // TODO: Open item picker modal
+    setIsItemPickerOpen(true);
+  };
+
+  const handleAddItemsSubmit = (itemIds: string[]) => {
+    console.log('Add items to collection:', itemIds);
+    // TODO: Call API to add items to collection
   };
 
   const handleEditCollection = (data: { name: string; description: string; isPublic: boolean }) => {
@@ -221,6 +226,15 @@ export const CollectionDetailPage = () => {
         onClose={() => setShareItem(null)}
         item={shareItem}
         onCreateShare={handleCreateShare}
+      />
+
+      {/* Item Picker Modal */}
+      <ItemPickerModal
+        isOpen={isItemPickerOpen}
+        onClose={() => setIsItemPickerOpen(false)}
+        onAdd={handleAddItemsSubmit}
+        excludeItemIds={collectionItems.map(item => item.id)}
+        title={`Add Items to ${collection.name}`}
       />
     </div>
   );

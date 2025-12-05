@@ -3,11 +3,13 @@ import { classNames } from '@/utils/classNames';
 import { Button, IconButton, Input, Textarea } from '@/components/common';
 import { X, Link as LinkIcon, Globe, AlertCircle } from 'lucide-react';
 import { mockTags } from '@/api/mockData';
+import type { Item } from '@/types/domain';
 
 interface AddLinkModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit?: (data: LinkFormData) => void;
+  link?: Item | null; // For edit mode
 }
 
 interface LinkFormData {
@@ -41,6 +43,7 @@ export const AddLinkModal: React.FC<AddLinkModalProps> = ({
   isOpen,
   onClose,
   onSubmit,
+  link,
 }) => {
   const [url, setUrl] = useState('');
   const [title, setTitle] = useState('');
@@ -52,6 +55,31 @@ export const AddLinkModal: React.FC<AddLinkModalProps> = ({
   const [urlError, setUrlError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  const isEditMode = !!link;
+
+  // Pre-fill form when editing
+  useEffect(() => {
+    if (link && isOpen) {
+      setUrl(link.url || '');
+      setTitle(link.title || '');
+      setDescription(link.description || '');
+      setCategory(link.category || '');
+      setProject(link.project || '');
+      setImportance(link.importance || 'normal');
+      setSelectedTags(link.tags?.map(t => t.id) || []);
+    } else if (!isOpen) {
+      // Reset form when closed
+      setUrl('');
+      setTitle('');
+      setDescription('');
+      setCategory('');
+      setProject('');
+      setImportance('normal');
+      setSelectedTags([]);
+      setUrlError('');
+    }
+  }, [link, isOpen]);
+
   // URL validation
   useEffect(() => {
     if (url && !isValidUrl(url)) {
@@ -61,15 +89,15 @@ export const AddLinkModal: React.FC<AddLinkModalProps> = ({
     }
   }, [url]);
 
-  // Auto-fill title from domain when URL changes
+  // Auto-fill title from domain when URL changes (only for new links)
   useEffect(() => {
-    if (url && isValidUrl(url) && !title) {
+    if (!isEditMode && url && isValidUrl(url) && !title) {
       const domain = getDomainFromUrl(url);
       if (domain) {
         setTitle(domain.replace('www.', ''));
       }
     }
-  }, [url, title]);
+  }, [url, title, isEditMode]);
 
   const handleSubmit = async () => {
     if (!url || urlError) return;
@@ -123,7 +151,9 @@ export const AddLinkModal: React.FC<AddLinkModalProps> = ({
             <div className="p-2 bg-blue-100 rounded-lg">
               <LinkIcon className="w-5 h-5 text-blue-600" />
             </div>
-            <h2 className="text-xl font-semibold text-text">Add Link</h2>
+            <h2 className="text-xl font-semibold text-text">
+              {isEditMode ? 'Edit Link' : 'Add Link'}
+            </h2>
           </div>
           <IconButton
             aria-label="Close"
@@ -278,7 +308,7 @@ export const AddLinkModal: React.FC<AddLinkModalProps> = ({
             disabled={!url || !!urlError}
             loading={isLoading}
           >
-            Add Link
+            {isEditMode ? 'Save Changes' : 'Add Link'}
           </Button>
         </div>
       </div>

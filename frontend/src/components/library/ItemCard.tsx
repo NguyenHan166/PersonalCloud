@@ -170,8 +170,10 @@ export const ItemCard: React.FC<ItemCardProps> = ({
             e.stopPropagation();
             onPin?.(item);
           }}
+          aria-label={item.isPinned ? 'Unpin item' : 'Pin item'}
           className={classNames(
             'p-1.5 rounded-md transition-colors',
+            'focus:outline-none focus:ring-2 focus:ring-primary/50',
             item.isPinned 
               ? 'bg-primary/10 text-primary' 
               : 'bg-white/90 text-muted hover:text-text hover:bg-white'
@@ -184,7 +186,8 @@ export const ItemCard: React.FC<ItemCardProps> = ({
             e.stopPropagation();
             onMenu?.(item, e);
           }}
-          className="p-1.5 rounded-md bg-white/90 text-muted hover:text-text hover:bg-white transition-colors"
+          aria-label="More options"
+          className="p-1.5 rounded-md bg-white/90 text-muted hover:text-text hover:bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50"
         >
           <MoreHorizontal className="w-4 h-4" />
         </button>

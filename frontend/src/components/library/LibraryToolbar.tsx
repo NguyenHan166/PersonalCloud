@@ -1,27 +1,30 @@
 import React, { useState } from 'react';
 import { classNames } from '@/utils/classNames';
-import { Button, Input, Badge, Select, Tooltip, IconButton } from '@/components/common';
+import { Button, Input, Badge, Dropdown, Tooltip, IconButton } from '@/components/common';
 import { 
   Search, 
   LayoutGrid, 
   List, 
   SlidersHorizontal,
   X,
-  ChevronDown,
   FileText,
   Link,
   StickyNote,
   ArrowUpDown,
+  Clock,
+  SortAsc,
+  SortDesc,
+  Calendar,
 } from 'lucide-react';
 import type { Tag, ItemType, ViewMode, SortField, SortOrder } from '@/types/domain';
 
-// Sort options
+// Sort options with icons
 const sortOptions = [
-  { value: 'updatedAt-desc', label: 'Last Modified' },
-  { value: 'updatedAt-asc', label: 'Oldest First' },
-  { value: 'createdAt-desc', label: 'Newest Created' },
-  { value: 'title-asc', label: 'Title A-Z' },
-  { value: 'title-desc', label: 'Title Z-A' },
+  { value: 'updatedAt-desc', label: 'Mới cập nhật', icon: <Clock className="w-4 h-4" />, description: 'Sắp xếp theo thời gian cập nhật' },
+  { value: 'updatedAt-asc', label: 'Cũ nhất', icon: <Clock className="w-4 h-4" />, description: 'Cập nhật cũ nhất trước' },
+  { value: 'createdAt-desc', label: 'Mới tạo', icon: <Calendar className="w-4 h-4" />, description: 'Tạo mới nhất trước' },
+  { value: 'title-asc', label: 'Tên A-Z', icon: <SortAsc className="w-4 h-4" />, description: 'Sắp xếp theo alphabet' },
+  { value: 'title-desc', label: 'Tên Z-A', icon: <SortDesc className="w-4 h-4" />, description: 'Sắp xếp ngược alphabet' },
 ];
 
 // Type filter options
@@ -139,15 +142,16 @@ export const LibraryToolbar: React.FC<LibraryToolbarProps> = ({
 
         {/* Mobile type select */}
         <div className="sm:hidden">
-          <Select
+          <Dropdown
             value={filters.type}
-            onChange={(e) => updateFilter('type', e.target.value as ItemType | 'all')}
-            options={typeOptions.map(o => ({ value: o.value, label: o.label }))}
+            onChange={(v) => updateFilter('type', v as ItemType | 'all')}
+            options={typeOptions.map(o => ({ value: o.value, label: o.label, icon: o.icon }))}
+            buttonClassName="min-w-[110px]"
           />
         </div>
 
         {/* Filter toggle */}
-        <Tooltip content="More filters">
+        <Tooltip content="Bộ lọc">
           <IconButton
             aria-label="Toggle filters"
             icon={<SlidersHorizontal className="w-full h-full" />}
@@ -157,15 +161,14 @@ export const LibraryToolbar: React.FC<LibraryToolbarProps> = ({
           />
         </Tooltip>
 
-        {/* Sort dropdown */}
-        <div className="hidden md:block">
-          <Select
-            value={`${filters.sortBy}-${filters.sortOrder}`}
-            onChange={(e) => handleSortChange(e.target.value)}
-            options={sortOptions}
-            leftIcon={<ArrowUpDown className="w-4 h-4" />}
-          />
-        </div>
+        {/* Sort dropdown - shown on all screen sizes */}
+        <Dropdown
+          value={`${filters.sortBy}-${filters.sortOrder}`}
+          onChange={handleSortChange}
+          options={sortOptions}
+          leftIcon={<ArrowUpDown className="w-4 h-4" />}
+          buttonClassName="min-w-[140px] md:min-w-[160px]"
+        />
 
         {/* View mode toggle */}
         <div className="flex items-center bg-gray-100 rounded-lg p-0.5">
@@ -229,27 +232,27 @@ export const LibraryToolbar: React.FC<LibraryToolbarProps> = ({
 
           {/* Category select */}
           {availableCategories.length > 0 && (
-            <Select
+            <Dropdown
               value={filters.category}
-              onChange={(e) => updateFilter('category', e.target.value)}
+              onChange={(v) => updateFilter('category', v)}
               options={[
-                { value: '', label: 'All Categories' },
+                { value: '', label: 'Tất cả danh mục' },
                 ...availableCategories.map(c => ({ value: c, label: c })),
               ]}
-              className="min-w-[140px]"
+              buttonClassName="min-w-[140px]"
             />
           )}
 
           {/* Project select */}
           {availableProjects.length > 0 && (
-            <Select
+            <Dropdown
               value={filters.project}
-              onChange={(e) => updateFilter('project', e.target.value)}
+              onChange={(v) => updateFilter('project', v)}
               options={[
-                { value: '', label: 'All Projects' },
+                { value: '', label: 'Tất cả dự án' },
                 ...availableProjects.map(p => ({ value: p, label: p })),
               ]}
-              className="min-w-[140px]"
+              buttonClassName="min-w-[140px]"
             />
           )}
 

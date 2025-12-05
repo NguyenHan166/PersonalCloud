@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { FileCard, FilePreviewModal, StorageBar, FilesToolbar, FileType } from '@/components/files';
+import { FileCard, FileListItem, FilePreviewModal, StorageBar, FilesToolbar, FileType } from '@/components/files';
 import { EmptyState } from '@/components/common';
 import { FileText } from 'lucide-react';
 import { mockFiles } from '@/api/mockData';
@@ -77,6 +77,18 @@ export const FilesPage = () => {
     // TODO: Open file upload modal
   };
 
+  const handlePin = (file: FileMeta) => {
+    console.log('Toggle pin:', file.filename);
+  };
+
+  const handleEdit = (file: FileMeta) => {
+    console.log('Edit:', file.filename);
+  };
+
+  const handleDelete = (file: FileMeta) => {
+    console.log('Delete:', file.filename);
+  };
+
   return (
     <div>
       {/* Page header */}
@@ -104,7 +116,7 @@ export const FilesPage = () => {
         totalFiles={filteredFiles.length}
       />
 
-      {/* File grid */}
+      {/* File grid/list */}
       {filteredFiles.length === 0 ? (
         <EmptyState
           icon={<FileText className="w-full h-full" />}
@@ -117,7 +129,7 @@ export const FilesPage = () => {
             onClick: handleUpload,
           }}
         />
-      ) : (
+      ) : viewMode === 'grid' ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {filteredFiles.map(file => (
             <FileCard
@@ -125,6 +137,23 @@ export const FilesPage = () => {
               file={file}
               onClick={handleFileClick}
               onDownload={handleDownload}
+              onPin={handlePin}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="space-y-2">
+          {filteredFiles.map(file => (
+            <FileListItem
+              key={file.id}
+              file={file}
+              onClick={handleFileClick}
+              onDownload={handleDownload}
+              onPin={handlePin}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
             />
           ))}
         </div>

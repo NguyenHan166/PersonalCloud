@@ -277,6 +277,7 @@ export const LinksPage = () => {
           setEditingLink(null);
         }}
         onSubmit={handleAddLink}
+        link={editingLink}
       />
     </div>
   );

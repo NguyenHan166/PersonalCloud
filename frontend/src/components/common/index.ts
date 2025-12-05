@@ -11,6 +11,9 @@ export type { TextareaProps } from './Textarea';
 export { Select } from './Select';
 export type { SelectProps, SelectOption } from './Select';
 
+export { Dropdown } from './Dropdown';
+export type { DropdownProps, DropdownOption } from './Dropdown';
+
 // Display components
 export { Badge } from './Badge';
 export type { BadgeProps } from './Badge';
@@ -36,3 +39,9 @@ export type { TabsProps, TabsListProps, TabsTriggerProps, TabsContentProps } fro
 
 export { Tooltip } from './Tooltip';
 export type { TooltipProps } from './Tooltip';
+
+// Toast components
+export { Toast } from './Toast';
+export type { ToastData, ToastVariant } from './Toast';
+
+export { ToastProvider, useToast } from './ToastProvider';

@@ -1,13 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { classNames } from '@/utils/classNames';
 import { Button, IconButton, Input, Textarea } from '@/components/common';
 import { X, StickyNote } from 'lucide-react';
 import { mockTags } from '@/api/mockData';
+import type { Item } from '@/types/domain';
 
 interface AddNoteModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit?: (data: NoteFormData) => void;
+  note?: Item | null; // For edit mode
 }
 
 interface NoteFormData {
@@ -23,6 +25,7 @@ export const AddNoteModal: React.FC<AddNoteModalProps> = ({
   isOpen,
   onClose,
   onSubmit,
+  note,
 }) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -31,6 +34,28 @@ export const AddNoteModal: React.FC<AddNoteModalProps> = ({
   const [importance, setImportance] = useState<'low' | 'normal' | 'high'>('normal');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const isEditMode = !!note;
+
+  // Pre-fill form when editing
+  useEffect(() => {
+    if (note && isOpen) {
+      setTitle(note.title || '');
+      setContent(note.content || '');
+      setCategory(note.category || '');
+      setProject(note.project || '');
+      setImportance(note.importance || 'normal');
+      setSelectedTags(note.tags?.map(t => t.id) || []);
+    } else if (!isOpen) {
+      // Reset form when closed
+      setTitle('');
+      setContent('');
+      setCategory('');
+      setProject('');
+      setImportance('normal');
+      setSelectedTags([]);
+    }
+  }, [note, isOpen]);
 
   const handleSubmit = async () => {
     if (!title.trim()) return;
@@ -81,7 +106,9 @@ export const AddNoteModal: React.FC<AddNoteModalProps> = ({
             <div className="p-2 bg-yellow-100 rounded-lg">
               <StickyNote className="w-5 h-5 text-yellow-600" />
             </div>
-            <h2 className="text-xl font-semibold text-text">New Note</h2>
+            <h2 className="text-xl font-semibold text-text">
+              {isEditMode ? 'Edit Note' : 'New Note'}
+            </h2>
           </div>
           <IconButton
             aria-label="Close"
@@ -210,7 +237,7 @@ export const AddNoteModal: React.FC<AddNoteModalProps> = ({
             disabled={!title.trim()}
             loading={isLoading}
           >
-            Create Note
+            {isEditMode ? 'Save Changes' : 'Create Note'}
           </Button>
         </div>
       </div>

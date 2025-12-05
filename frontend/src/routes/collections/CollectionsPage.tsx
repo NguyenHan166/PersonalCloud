@@ -19,7 +19,7 @@ export const CollectionsPage = () => {
   );
 
   const handleCollectionClick = (collection: Collection) => {
-    navigate(`/collections/${collection.id}`);
+    navigate(`/app/collections/${collection.id}`);
   };
 
   const handleCreateCollection = (data: { name: string; description: string; isPublic: boolean }) => {
