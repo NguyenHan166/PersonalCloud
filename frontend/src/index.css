@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+@theme {
+  /* ========== Colors ========== */
+  --color-background: #F8FAFC;
+  --color-surface: #FFFFFF;
+  --color-primary: #6366F1;
+  --color-primary-dark: #4F46E5;
+  --color-accent: #8B5CF6;
+  --color-border: #E2E8F0;
+  --color-muted: #94A3B8;
+  --color-text: #1E293B;
+  --color-text-secondary: #64748B;
+  
+  /* Status colors */
+  --color-success: #22C55E;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --color-info: #3B82F6;
+  
+  /* ========== Typography ========== */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  
+  /* ========== Shadows ========== */
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  
+  /* ========== Animation ========== */
+  --animate-fade-in: fade-in 0.2s ease-out;
+  --animate-slide-in: slide-in 0.25s ease-out;
+  --animate-spin: spin 1s linear infinite;
+  
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes slide-in {
+    from { 
+      opacity: 0;
+      transform: translateX(10px);
+    }
+    to { 
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  
+  @keyframes slide-in-right {
+    from { 
+      transform: translateX(100%);
+      opacity: 0.5;
+    }
+    to { 
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slide-out-right {
+    from { 
+      transform: translateX(0);
+      opacity: 1;
+    }
+    to { 
+      transform: translateX(100%);
+      opacity: 0.5;
+    }
+  }
+  
+  /* Custom durations */
+  --duration-400: 400ms;
+}
+
+/* ========== Base Styles ========== */
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-background);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Focus ring utility */
+.focus-ring {
+  @apply outline-none ring-2 ring-primary/50 ring-offset-2;
+}
