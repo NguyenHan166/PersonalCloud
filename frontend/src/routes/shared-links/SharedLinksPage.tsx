@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Share2, Copy, Ban, ExternalLink, Lock, Clock, Eye, Check, FileText, Link as LinkIcon, Image, StickyNote } from 'lucide-react';
+import { Share2, Copy, Ban, ExternalLink, Lock, Clock, Eye, Check, FileText, Link as LinkIcon, Image, StickyNote, RefreshCw, Trash2 } from 'lucide-react';
 import { EmptyState, Badge, Tooltip } from '@/components/common';
 import { mockSharedLinks } from '@/api/mockData';
 import type { SharedLink, Item } from '@/types/domain';
@@ -59,6 +59,22 @@ export const SharedLinksPage = () => {
   const handleRevoke = (link: SharedLink) => {
     console.log('Revoke link:', link.id);
     // TODO: Call API to revoke
+  };
+
+  // Extend share link expiration
+  const handleExtend = (link: SharedLink) => {
+    console.log('Extend link:', link.id);
+    // TODO: Call API to extend (default 7 days = 168 hours)
+    // extendSharedLink(link.id, 168)
+  };
+
+  // Permanently delete share link
+  const handleDelete = (link: SharedLink) => {
+    if (window.confirm('Are you sure you want to permanently delete this share link?')) {
+      console.log('Delete link:', link.id);
+      // TODO: Call API to delete
+      // deleteSharedLink(link.id)
+    }
   };
 
   const hasLinks = mockSharedLinks.length > 0;
@@ -199,16 +215,37 @@ export const SharedLinksPage = () => {
                                 <ExternalLink className="w-4 h-4" />
                               </a>
                             </Tooltip>
+                            {/* Extend button - for active and expired links */}
+                            {status !== 'revoked' && (
+                              <Tooltip content="Extend 7 days">
+                                <button
+                                  onClick={() => handleExtend(link)}
+                                  className="p-2 rounded-lg hover:bg-blue-50 text-muted hover:text-blue-500 transition-colors"
+                                >
+                                  <RefreshCw className="w-4 h-4" />
+                                </button>
+                              </Tooltip>
+                            )}
+                            {/* Revoke button - only for active links */}
                             {status === 'active' && (
                               <Tooltip content="Revoke access">
                                 <button
                                   onClick={() => handleRevoke(link)}
-                                  className="p-2 rounded-lg hover:bg-red-50 text-muted hover:text-red-500 transition-colors"
+                                  className="p-2 rounded-lg hover:bg-orange-50 text-muted hover:text-orange-500 transition-colors"
                                 >
                                   <Ban className="w-4 h-4" />
                                 </button>
                               </Tooltip>
                             )}
+                            {/* Delete button - for all links */}
+                            <Tooltip content="Delete permanently">
+                              <button
+                                onClick={() => handleDelete(link)}
+                                className="p-2 rounded-lg hover:bg-red-50 text-muted hover:text-red-500 transition-colors"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </Tooltip>
                           </div>
                         </td>
                       </tr>

@@ -93,6 +93,40 @@ export async function revokeSharedLink(id: string): Promise<boolean> {
 }
 
 /**
+ * PATCH /api/shared-links/:id/extend
+ * Extend shared link expiration
+ */
+export async function extendSharedLink(id: string, additionalHours: number = 168): Promise<SharedLink | null> {
+  await delay(API_DELAY);
+  const link = mockSharedLinks.find(l => l.id === id);
+  if (!link) return null;
+  
+  // Calculate new expiration time
+  const currentExpiry = new Date(link.expiresAt);
+  const now = new Date();
+  // If expired, extend from now; otherwise extend from current expiry
+  const baseTime = currentExpiry < now ? now : currentExpiry;
+  baseTime.setHours(baseTime.getHours() + additionalHours);
+  
+  // Return updated link (in real implementation, this would update the backend)
+  return {
+    ...link,
+    expiresAt: baseTime.toISOString(),
+    isRevoked: false, // Re-activate if it was revoked
+  };
+}
+
+/**
+ * DELETE /api/shared-links/:id (permanent delete)
+ * Permanently delete a shared link
+ */
+export async function deleteSharedLink(id: string): Promise<boolean> {
+  await delay(API_DELAY);
+  // In real implementation, this would permanently remove from database
+  return mockSharedLinks.some(link => link.id === id);
+}
+
+/**
  * Get share URL for a token
  */
 export function getShareUrl(token: string): string {
